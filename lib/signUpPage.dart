@@ -118,7 +118,6 @@ class _SignUpPageState extends State<SignUpPage> {
     final username = userNameInput.text.trim();
     final email = emailInput.text.trim();
     final password = passwordInput.text.trim();
-    final startUpName = startUpInput.text.trim();
 
     final user = ParseUser.createUser(username, password, email);
 
@@ -126,11 +125,14 @@ class _SignUpPageState extends State<SignUpPage> {
 
     if (response.success) {
       print('successfully signed Up');
+
       loginRedirect();
     } else {
       print('some technical error');
     }
   }
+
+  void createStartUp() {}
 
   void loginRedirect() {
     Navigator.pushReplacement(

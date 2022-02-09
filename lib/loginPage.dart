@@ -18,14 +18,14 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Founder Blocks Progress'),
-        backgroundColor: Color(0XFF3366FF),
+        title: const Text('Founder Blocks Progress'),
+        backgroundColor: const Color(0XFF3366FF),
       ),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
             TextField(
@@ -33,12 +33,12 @@ class _LoginPageState extends State<LoginPage> {
               keyboardType: TextInputType.text,
               textCapitalization: TextCapitalization.none,
               autocorrect: false,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
                   labelText: 'Username'),
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             TextField(
@@ -47,12 +47,12 @@ class _LoginPageState extends State<LoginPage> {
               keyboardType: TextInputType.text,
               textCapitalization: TextCapitalization.none,
               autocorrect: false,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
                   labelText: 'Password'),
             ),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
             Container(
@@ -62,10 +62,10 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () => userLoginPage(),
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(Color(0XFF3366FF))),
+                        MaterialStateProperty.all(const Color(0XFF3366FF))),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
             Container(
@@ -75,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () => signUpPage(),
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(Color(0XFF3366FF))),
+                        MaterialStateProperty.all(const Color(0XFF3366FF))),
               ),
             ),
           ],
@@ -93,7 +93,6 @@ class _LoginPageState extends State<LoginPage> {
     var response = await user.login();
 
     if (response.success) {
-      print('success');
       showProgressOfStartup();
     } else {
       print('not success');
@@ -101,15 +100,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> showProgressOfStartup() async {
-    print('home screen opening');
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => HomeScreenAfterLogin()),
+      MaterialPageRoute(builder: (context) => const HomeScreenAfterLogin()),
     );
   }
 
   void signUpPage() {
-    print('success signup page');
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => SignUpPage()),

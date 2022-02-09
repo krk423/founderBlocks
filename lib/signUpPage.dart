@@ -1,8 +1,12 @@
+// ignore_for_file: unnecessary_const
+
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'loginPage.dart';
 
 class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key}) : super(key: key);
+
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
@@ -19,14 +23,14 @@ class _SignUpPageState extends State<SignUpPage> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Founder Blocks Sign Up'),
+          title: const Text('Founder Blocks Sign Up'),
           backgroundColor: const Color(0XFF3366FF),
         ),
         body: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               TextField(
@@ -34,12 +38,12 @@ class _SignUpPageState extends State<SignUpPage> {
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.none,
                 autocorrect: false,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
                     labelText: 'Username'),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               TextField(
@@ -48,12 +52,12 @@ class _SignUpPageState extends State<SignUpPage> {
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.none,
                 autocorrect: false,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
                     labelText: 'Password'),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               TextField(
@@ -61,12 +65,12 @@ class _SignUpPageState extends State<SignUpPage> {
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.none,
                 autocorrect: false,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
                     labelText: 'Email'),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               TextField(
@@ -74,12 +78,12 @@ class _SignUpPageState extends State<SignUpPage> {
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.none,
                 autocorrect: false,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black)),
+                decoration: const InputDecoration(
+                    border: const OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.black)),
                     labelText: 'Startup Name'),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               TextField(
@@ -87,15 +91,15 @@ class _SignUpPageState extends State<SignUpPage> {
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.none,
                 autocorrect: false,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black)),
+                decoration: const InputDecoration(
+                    border: const OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.black)),
                     labelText: 'Startup Description'),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
-              Container(
+              SizedBox(
                 height: 50,
                 child: TextButton(
                   child: const Text(
@@ -104,7 +108,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   onPressed: () => signUp(),
                   style: TextButton.styleFrom(
                       primary: Colors.white,
-                      backgroundColor: Color(0XFF3366FF)),
+                      backgroundColor: const Color(0XFF3366FF)),
                 ),
               ),
             ],
@@ -119,25 +123,42 @@ class _SignUpPageState extends State<SignUpPage> {
     final email = emailInput.text.trim();
     final password = passwordInput.text.trim();
 
-    final user = ParseUser.createUser(username, password, email);
+    final startupInput = startUpInput.text.trim();
+    final startupDescription = startUpDesc.text.trim();
+    String startUpPointer = '';
+
+    final todo = ParseObject('StartUp')
+      ..set('startUpName', startupInput)
+      ..set('startUpDescription', startupDescription);
+    await todo.save();
+
+    final QueryBuilder<ParseObject> startUpQuery =
+        QueryBuilder<ParseObject>(ParseObject('StartUp'));
+    startUpQuery.whereContains('startUpName', startupInput);
+    final ParseResponse startUpResponse = await startUpQuery.query();
+    for (var startUp in startUpResponse.results!) {
+      startUpPointer = startUp.get('objectId');
+      break;
+    }
+    print(startUpPointer);
+    final user = ParseUser.createUser(
+      username,
+      password,
+      email,
+    )..set('startUpPointer',
+        (ParseObject('StartUp')..objectId = startUpPointer).toPointer());
 
     var response = await user.signUp();
 
     if (response.success) {
-      print('successfully signed Up');
-
       loginRedirect();
-    } else {
-      print('some technical error');
     }
   }
-
-  void createStartUp() {}
 
   void loginRedirect() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (context) => const LoginPage()),
     );
   }
 }

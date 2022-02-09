@@ -38,7 +38,7 @@ class _HomeScreenAfterLoginState extends State<HomeScreenAfterLogin> {
                     const SizedBox(
                       height: 16,
                     ),
-                    Container(
+                    SizedBox(
                       height: 25,
                       child: TextButton(
                         child: const Text('Logout'),
@@ -89,16 +89,12 @@ class _HomeScreenAfterLoginState extends State<HomeScreenAfterLogin> {
                                       itemCount: snapshot
                                           .data![position]['steps'].length,
                                       itemBuilder: (_, int position1) {
-                                        final itemSteps =
-                                            snapshot.data![position]['steps'];
                                         return Column(
                                           children: [
                                             const SizedBox(height: 10),
-                                            Container(
-                                                child: Text(snapshot
-                                                    .data![position]['steps']
-                                                        [position1]
-                                                    .toString()))
+                                            Text(snapshot.data![position]
+                                                    ['steps'][position1]
+                                                .toString())
                                           ],
                                         );
                                       })),
@@ -118,11 +114,9 @@ class _HomeScreenAfterLoginState extends State<HomeScreenAfterLogin> {
                                       return Column(
                                         children: [
                                           const SizedBox(height: 10),
-                                          Container(
-                                              child: Text(snapshot
-                                                  .data![position]['goals']
-                                                      [position1]
-                                                  .toString()))
+                                          Text(snapshot.data![position]['goals']
+                                                  [position1]
+                                              .toString())
                                         ],
                                       );
                                     }),
@@ -157,41 +151,13 @@ class _HomeScreenAfterLoginState extends State<HomeScreenAfterLogin> {
     return currentUser;
   }
 
-  Future<String?> getUserStartUp() async {
-    currentUser = await ParseUser.currentUser() as ParseUser?;
-    return currentUser?.username.toString();
-  }
-
-  String? getUserString() {
-    Future current = getUserStartUp();
-
-    current.then((data) {
-      return data['username'].toString();
-    }, onError: (e) {
-      return ' ';
-    });
-  }
-
-  String getString(String? x) {
-    if (x == null) {
-      return 'i love you';
-    } else {
-      return x;
-    }
-  }
-
   Future<String?> getStartUp() async {
     currentUser = await ParseUser.currentUser() as ParseUser?;
-    String x;
-    if (currentUser == null) {
-      x = 'I love coding';
-    } else {
-      x = currentUser!.username.toString();
-    }
+    String username = currentUser!.username.toString();
 
     QueryBuilder<ParseUser> queryUsers =
         QueryBuilder<ParseUser>(ParseUser.forQuery());
-    queryUsers.whereContains(ParseUser.keyUsername, x);
+    queryUsers.whereContains(ParseUser.keyUsername, username);
     final ParseResponse apiResponse = await queryUsers.query();
 
     if (apiResponse.success && apiResponse.results != null) {
@@ -213,25 +179,19 @@ class _HomeScreenAfterLoginState extends State<HomeScreenAfterLogin> {
   }
 
   Future<List?> getStepsWithBlocks() async {
-    print('getCurrentUser inside getStepsWithBlocks');
     currentUser = await ParseUser.currentUser() as ParseUser?;
-    String x;
-    if (currentUser == null) {
-      x = ' ';
-    } else {
-      x = currentUser!.username.toString();
-    }
+    String username = currentUser!.username.toString();
+
     var resultList = [];
 
     QueryBuilder<ParseUser> queryUsers =
         QueryBuilder<ParseUser>(ParseUser.forQuery());
-    queryUsers.whereContains(ParseUser.keyUsername, x);
+    queryUsers.whereContains(ParseUser.keyUsername, username);
     final ParseResponse apiResponse = await queryUsers.query();
 
     if (apiResponse.success && apiResponse.results != null) {
       for (var a in apiResponse.results! as List<ParseObject>) {
         String startUpPointer = a.get('startUpPointer').objectId;
-        print(startUpPointer);
 
         final QueryBuilder<ParseObject> blocksQuery =
             QueryBuilder<ParseObject>(ParseObject('Blocks'));
@@ -245,11 +205,10 @@ class _HomeScreenAfterLoginState extends State<HomeScreenAfterLogin> {
           var goalStatusList = [];
           var goalStatusNCount = 0;
           var goalStatusYCount = 0;
-          var numberOfGoals;
+          int numberOfGoals = 0;
           String showGoalsStatus;
           final QueryBuilder<ParseObject> stepsQuery =
               QueryBuilder<ParseObject>(ParseObject('Steps'));
-          //  stepsQuery.whereContains('startUpId', startUpPointer);
           stepsQuery.whereContains('blockId', blocks.get('objectId'));
           stepsQuery.orderByAscending('stepNumber');
           final ParseResponse stepsResponse = await stepsQuery.query();

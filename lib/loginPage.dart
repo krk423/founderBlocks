@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 16,
             ),
-            Container(
+            SizedBox(
               height: 50,
               child: ElevatedButton(
                 child: const Text('Login'),
@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 16,
             ),
-            Container(
+            SizedBox(
               height: 50,
               child: ElevatedButton(
                 child: const Text('Sign Up'),
@@ -94,8 +94,6 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.success) {
       showProgressOfStartup();
-    } else {
-      print('not success');
     }
   }
 
@@ -109,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
   void signUpPage() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => SignUpPage()),
+      MaterialPageRoute(builder: (context) => const SignUpPage()),
     );
   }
 }
